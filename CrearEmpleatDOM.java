@@ -5,7 +5,7 @@ import javax.xml.transform.dom.*;
 import javax.xml.transform.stream.*;
 import java.io.*;
 
-public class CrearEmpleat {
+public class CrearEmpleatDOM {
 
     public static void main (String args[]) throws IOException {
         
@@ -46,9 +46,9 @@ public class CrearEmpleat {
                     arrel.setAttribute("id",Integer.toString(id));
                     document.getDocumentElement().appendChild(arrel);
 
-                    CrearElemento ("nomEmp",nomEmps.trim(), arrel, document);
-                    CrearElemento ("dep", Integer.toString(dep), arrel, document);
-                    CrearElemento ("salari", Double.toString(salari),arrel, document);
+                    CrearElement ("nomEmp",nomEmps.trim(), arrel, document);
+                    CrearElement ("dep", Integer.toString(dep), arrel, document);
+                    CrearElement ("salari", Double.toString(salari),arrel, document);
                 }
         
                 posicio = posicio + 56;
@@ -68,8 +68,8 @@ public class CrearEmpleat {
             file.close();
         }
         
-        public static void CrearElemento (String datoempleat, String valor, Element arrel, Document document) {
-            Element elem = document.createElement (datoempleat);
+        public static void CrearElement (String dadaEmpleat, String valor, Element arrel, Document document) {
+            Element elem = document.createElement (dadaEmpleat);
             Text text = document.createTextNode(valor);
             arrel.appendChild (elem);
             elem.appendChild (text);

@@ -1,7 +1,7 @@
 import java.io.IOException;
 import java.io.RandomAccessFile;
 
-public class EscriureAleatori {
+public class EscriureEmpleatsAleatori {
 
     public static void main(String[] args) throws IOException {
 
