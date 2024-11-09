@@ -14,50 +14,59 @@ import org.xml.sax.helpers.DefaultHandler;
 public class LecturaSAX {
     public static void main (String [] args)
            throws FileNotFoundException, IOException, SAXException, ParserConfigurationException {
-/* A continuación se crea objeto procesador XML - XMLReader -. Durante la creación de este objeto se puede producir una 
-excepción SAXException. */
-//   XMLReader procesadorXML = XMLReaderFactory.createXMLReader();
+
         SAXParserFactory saxpf = SAXParserFactory.newInstance();
         SAXParser parser = saxpf.newSAXParser();
         XMLReader procesadorXML = parser.getXMLReader();
-/* A continuación, mediante setContentHandler establecemos que la clase que gestiona los eventos provocados por la 
-lectura del XML será GestionContenido */
-        GestionContenido gestor = new GestionContenido();
+
+/*Es podria utilitzar defaultHandler, però millor utilitzar la subclasse ja que aquesta
+  pot incorporar altres mètodes o modificar els que incorpora per defecte*/        
+        GestioContingut gestor = new GestioContingut();
         procesadorXML.setContentHandler(gestor);
-/* Por último, se define el fichero que se va leer mediante InputSource y se procesa el documento XML mediante el 
-método parse() de XMLReader */
+
         InputSource fileXML = new InputSource ("empleats.xml");
         procesadorXML.parse(fileXML);
    }
 }
-//Clases e interfaces de SAX
-/* GestionContenido es la clase que implementa los métodos necesarios para crear nuestro parser de XML. Es decir, 
-definimos los métodos que serán llamados al provocarse los eventos comentados anteriormente: startDocument, 
-startElement, characters, etc. Si quisieramos tratar más eventos definiríamos el método asociado en esta clase. */
-    class GestionContenido extends DefaultHandler {
-        public GestionContenido(){
+/*Classes i interfícies de SAX
+ GestionContingut és la classe que implementa els mètodes necessaris per crear el nostre parser de XML. És a dir, 
+definim els mètodes que seran cridats en provocar-se els esdeveniments comentats anteriorment: startDocument, 
+startElement, characters, etc. Si volguéssim tractar més esdeveniments definiríem el mètode associat en aquesta classe. */
+  
+    class GestioContingut extends DefaultHandler {
+        public GestioContingut(){
         super();
         }
 
+//Anunciem l'inici del document
         public void startDocument(){
-        System.out.println("Comienzo del documento XML");
+        System.out.println("Inici del document XML");
         }
 
+//Anunciem el final del document
         public void endDocument(){
-        System.out.println("Final del documento XML");
+        System.out.println("Final del document XML");
         }
 
-        public void startElement (String uri, String nombre, String nombreC, Attributes atts) {
-        System.out.printf("\tPrincipio Elemento: %s %n", nombre);
+//Comencem a tractar els elements
+        public void startElement (String uri, String nom, String nomC, Attributes atts) {
+            for (int i = 0; i < atts.getLength(); i++) {
+                String nomAtribut = atts.getQName(i); // Nom de l'atribut (si l'element en té)
+                String valorAtribut = atts.getValue(i);   // Valor d'aquest atribut
+                System.out.printf("\t\tAtribut: %s, Valor: %s %n", nomAtribut, valorAtribut);
+            }
+            System.out.printf("\tPrincipi Element: %s %n", nomC);
         }
 
-        public void endElement (String uri, String nombre, String nombreC){
-        System.out.printf("\tFin Elemento: %s %n",nombre);
-        }
-
+//Final de tractament dels elements
         public void characters(char[] ch, int inicio, int longitud) throws SAXException {
-            String car = new String (ch, inicio, longitud);
-            car = car.replaceAll("[\t\n]","");
-            System.out.printf("\tCaracteres: %s %n", car);
+            String car = new String (ch, inicio, longitud).trim();
+            if (!car.isEmpty()) {
+                System.out.printf("\tCaracters: %s %n", car);
+            }
+        }
+
+        public void endElement (String uri, String nom, String nomC){
+            System.out.printf("\tFinal d'element: %s %n",nomC);
         }
 }
